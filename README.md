@@ -1,8 +1,14 @@
-# morphic-ts-routing
+# fp-ts-routing-adt
 
-Parses route strings to a sum type using Matches from fp-ts-routing. Tangentially inspired by [purescript-routing-duplex](https://github.com/natefaubion/purescript-routing-duplex)
+Parses route strings to a sum type using Matches from fp-ts-routing. Tangentially inspired by [purescript-routing-duplex](https://github.com/natefaubion/purescript-routing-duplex). Simplified version of [morphic-ts-routing](https://www.npmjs.com/package/morphic-ts-routing)
 
 # Usage
+
+## Installation
+
+```
+yarn add fp-ts-routing-adt
+```
 
 ## Note
 
@@ -10,8 +16,7 @@ Formatting the `NotFound` type will return '/'
 
 ```ts
 import * as R from 'fp-ts-routing'
-import { routingFromMatches3 } from 'morphic-ts-routing'
-import { ADTType, ADT } from '@morphic-ts/adt'
+import { routingFromMatches3 } from 'fp-ts-routing-adt'
 
 const landing: R.Match<{}> = R.end
 const show: R.Match<{}> = R.lit('show').then(R.end)
@@ -20,13 +25,12 @@ const id: R.Match<{ id: number }> = R.int('id').then(R.end)
 const {
   parse,
   format,
-  adt: RouteADT
 } = routingFromMatches3(
   ['Landing', landing],
   ['Show', show],
   ['Id', id],
 );
-type RouteADT = ADTType<typeof RouteADT>
+type RouteADT = ReturnType<typeof parse>
 
 /*
   type RouteADT = {
@@ -39,7 +43,6 @@ type RouteADT = ADTType<typeof RouteADT>
       type: "Id";
       id: number;
   }
-  const RouteADT: ADT<RouteADT, "type">
   const parse: (path: string) => RouteADT
   const format: (adt: RouteADT) => string
  */
@@ -48,11 +51,13 @@ type RouteADT = ADTType<typeof RouteADT>
 
 # Package size
 
-If this package is too big for your website, you can use `codegenWithNumRoutes` to generate a single file
+If this package is too big for your website, you can use `codegenWithNumRoutes` to generate a single file.
 
 ```ts
+// GenerateRoute.ts
+
 import * as fs from 'fs'
-import { codegenWithNumRoutes } from 'morphic-ts-routing'
+import { codegenWithNumRoutes } from 'fp-ts-routing-adt'
 
 fs.writeFile(
   `src/RoutingFromMatches100.ts`,
@@ -67,12 +72,10 @@ fs.writeFile(
 );
 ```
 
-# Limitation
-
-The library supports up to sixteen (16) routes. It cannot support more than that - if you try, you get this error:
+You can run it on the cli w/ `ts-node`
 
 ```
-Expression produces a union type that is too complex to represent.
+yarn global add ts-node
+yarn global add typescript
+ts-node GenerateRoute.ts
 ```
-
-I'm uncertain what to do about this. Please make a PR if you have any ideas. Thanks!
