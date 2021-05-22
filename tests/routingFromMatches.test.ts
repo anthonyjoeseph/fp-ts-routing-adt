@@ -1,19 +1,13 @@
 import * as assert from 'assert';
-import * as R from 'fp-ts-routing';
-import { routingFromMatches3 } from '../src/index';
+import * as Rou from 'fp-ts-routing';
+import { routingFromMatches } from '../src/index';
 
 describe('Generated ADTs', () => {
 
-  const landing: R.Match<{}> = R.end
-  const show: R.Match<{}> = R.lit('show').then(R.end)
-  const id: R.Match<{ id: number }> = R.int('id').then(R.end)
-  const {
-    parse,
-    format,
-  } = routingFromMatches3(
-    ['Landing', landing],
-    ['Show', show],
-    ['Id', id],
+  const { parse, format } = routingFromMatches(
+    ['Landing', Rou.end],
+    ['Show', Rou.lit('show').then(Rou.end)],
+    ['Id', Rou.int('id').then(Rou.end)],
   );
   type RouteADT = ReturnType<typeof parse>
 
