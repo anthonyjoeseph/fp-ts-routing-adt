@@ -33,3 +33,24 @@ export function routingFromMatches<
     ),
   };
 }
+type ExtractRouteParams<T extends string> =
+  string extends T
+  ? Record<string, string>
+  : T extends `${infer Start}:${infer Param}/${infer Rest}`
+  ? {[k in Param | keyof ExtractRouteParams<Rest>]: string}
+  : T extends `${infer Start}:${infer Param}`
+  ? {[k in Param]: string}
+  : {};
+
+export const matchFromRoute = <T extends string>(
+  t: T
+): R.Match<ExtractRouteParams<T>> => t.split('/')
+  .reduce(
+    (acc, cur) => {
+      const next: R.Match<ExtractRouteParams<T>> = cur.startsWith(':') 
+        ? R.lit(cur.substring(1))
+        : R.str(cur.substring(1)) as any
+      return !!acc ? acc.then(next as any) : next
+    },
+    undefined as undefined | R.Match<ExtractRouteParams<T>>
+  )?.then(R.end) ?? R.end as unknown as R.Match<ExtractRouteParams<T>>
