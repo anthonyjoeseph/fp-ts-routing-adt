@@ -1,6 +1,6 @@
 {
   "name": "fp-ts-routing-adt",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Helper function that builds an fp-ts-routing parser and formatter from keyed Matches.",
   "main": "dist/index.js",
   "repository": "https://github.com/anthonyjoeseph/fp-ts-routing-adt",
